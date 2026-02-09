@@ -1,0 +1,14 @@
+service:
+  name: safedeploy
+  environment: production
+
+thresholds:
+  error_rate_multiplier: 2.0
+  latency_multiplier: 1.5
+  max_latency_ms: 600
+
+timing:
+  observation_window_seconds: 300
+
+mode:
+  dry_run: true
