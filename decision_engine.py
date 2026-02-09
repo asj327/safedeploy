@@ -3,19 +3,21 @@ def decide_deployment(
     canary_error_rate,
     stable_latency,
     canary_latency,
-    canary_healthy
+    canary_healthy,
+    error_multiplier,
+    latency_multiplier,
+    max_latency
 ):
-    # Rule 1: Canary must be alive
     if not canary_healthy:
         return "ROLLBACK"
 
-    # Rule 2: Error rate comparison
-    if canary_error_rate > 2 * stable_error_rate:
+    if canary_error_rate > stable_error_rate * error_multiplier:
         return "ROLLBACK"
 
-    # Rule 3: Latency comparison
-    if canary_latency > 1.5 * stable_latency:
+    if canary_latency > stable_latency * latency_multiplier:
         return "ROLLBACK"
 
-    # If all checks pass
-    return "PROMOTE"
+    if canary_latency > max_latency:
+        return "ROLLBACK"
+
+    return "CONTINUE"
